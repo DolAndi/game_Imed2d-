@@ -7,8 +7,8 @@ altura = 669
 configTela = (largura, altura)
 gameDisplay = pygame.display.set_mode(configTela)
 clock = pygame.time.Clock()
-black = (0, 0, 0)
 white = (255, 255, 255)
+red = (255, 0, 0)
 pygame.display.set_caption("Pokémon Dodge")
 icone = pygame.image.load("assets/pikachuicon.png")
 pygame.display.set_icon(icone)
@@ -19,12 +19,16 @@ pokeball = pygame.image.load("assets/pokeball2.jpg")
 capturadoSound = pygame.mixer.Sound("assets/pikachu_scream.mp3")
 descargaSound = pygame.mixer.Sound("assets/descarga.mp3")
 descargaSound.set_volume(0.2)
+nomeJogador = str(input("Insira o seu nome: "))
+emailJogador = str(input("Insira o seu email: "))
+arquivo = open("historico.txt", "a")
+arquivo.write("Participante: " + nomeJogador + " email: " + emailJogador + "\n")
 def mostraPikachu(x, y):
     gameDisplay.blit(pikachu, (x, y))
 def mostraPokeball(x, y):
     gameDisplay.blit(pokeball, (x, y))
 def text_objects(texto, font):
-    textSurface = font.render(texto, True, black)
+    textSurface = font.render(texto, True, red)
     return textSurface, textSurface.get_rect()
 def escreverTela(texto):
     fonte = pygame.font.Font("freesansbold.ttf", 70)
@@ -86,11 +90,9 @@ def game():
             pikachuPosicaoX = 0
         elif pikachuPosicaoX > largura-larguraPikachu:
             pikachuPosicaoX = largura-larguraPikachu
-        #analise de colisão 
         if pikachuPosicaoY < pokeballY + pokeballAltura:
             if pikachuPosicaoX < pokeballX and pikachuPosicaoX+larguraPikachu > pokeballX or pokeballX+pokeballLargura > pikachuPosicaoX and pokeballX+pokeballLargura < pikachuPosicaoX+larguraPikachu:
                 dead()
-        #analise de colisão 
         mostraPikachu(pikachuPosicaoX, pikachuPosicaoY)
         pygame.display.update()
         clock.tick(60) 
