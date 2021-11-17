@@ -13,13 +13,12 @@ pygame.display.set_caption("Pokémon Dodge")
 icone = pygame.image.load("assets2/pikachuicon.png")
 pygame.display.set_icon(icone)
 pikachu = pygame.image.load("assets2/pikachu2.png")
-larguraPikachu = 110
+larguraPikachu = 256
 fundo = pygame.image.load("assets2/cidade_pallet.png")
 pokeball = pygame.image.load("assets2/pokeball2.jpg")
 capturadoSound = pygame.mixer.Sound("assets2/pikachu_scream.mp3")
 descargaSound = pygame.mixer.Sound("assets2/descarga.mp3")
 descargaSound.set_volume(0.2)
-
 def mostraPikachu(x, y):
     gameDisplay.blit(pikachu, (x, y))
 def mostraPokeball(x, y):
@@ -28,7 +27,7 @@ def text_objects(texto, font):
     textSurface = font.render(texto, True, black)
     return textSurface, textSurface.get_rect()
 def escreverTela(texto):
-    fonte = pygame.font.Font("freesansbold.ttf", 115)
+    fonte = pygame.font.Font("freesansbold.ttf", 70)
     TextSurf, TextRect = text_objects(texto, fonte)
     TextRect.center = ((largura/2, altura/2))
     gameDisplay.blit(TextSurf, TextRect)
@@ -42,27 +41,24 @@ def escreverPlacar(contador):
 def dead():
     pygame.mixer.Sound.play(capturadoSound)
     pygame.mixer.music.stop()
-    escreverTela("Você Morreu!")
-
+    escreverTela("Você foi capturado!")
 def game():
     pygame.mixer.music.load("assets2/pokemonbattle.mp3")
     pygame.mixer.music.set_volume(0.3)
     pygame.mixer.music.play(-1)
-    ironPosicaoX = largura*0.2
-    ironPosicaoY = altura*0.2
+    pikachuPosicaoX = largura*0.2
+    pikachuPosicaoY = altura*0.62
     movimentoX = 0
     velocidade = 15
-    misselAltura = 25
-    misselLargura = 25
-    misselVelocidade = 3
-    misselX = random.randrange(0, largura)
-    misselY = -200
+    pokeballAltura = 10
+    pokeballLargura = 10
+    pokeballVelocidade = 3
+    pokeballX = random.randrange(0, largura)
+    pokeballY = -200
     desvios = 0
     pygame.mixer.Sound.play(descargaSound)
     while True:
-        # pega as ações da tela. Ex.: fechar, click de uma tecla ou do mouse
-        acoes = pygame.event.get()  # devolve uma lista de ações
-        # [ini] mapeando as ações
+        acoes = pygame.event.get() 
         for acao in acoes:
             if acao.type == pygame.QUIT:
                 pygame.quit()
@@ -74,31 +70,28 @@ def game():
                     movimentoX = velocidade
             if acao.type == pygame.KEYUP:
                 movimentoX = 0
-        # [end] mapeando as ações
-        # definindo o fundo do game
         gameDisplay.fill(white)
         gameDisplay.blit(fundo, (0, 0))
-        # definindo o fundo do game]
         escreverPlacar(desvios)
-        misselY = misselY + misselVelocidade
-        mostraPokeball(misselX, misselY)
-        if misselY > altura:
-            misselY = -200
-            misselX = random.randrange(0, largura)
+        pokeballY = pokeballY + pokeballVelocidade
+        mostraPokeball(pokeballX, pokeballY)
+        if pokeballY > altura:
+            pokeballY = -200
+            pokeballX = random.randrange(0, largura)
             desvios = desvios+1
-            misselVelocidade += 3
+            pokeballVelocidade += 3
             pygame.mixer.Sound.play(descargaSound)
-        ironPosicaoX += movimentoX
-        if ironPosicaoX < 0:
-            ironPosicaoX = 0
-        elif ironPosicaoX > largura-larguraPikachu:
-            ironPosicaoX = largura-larguraPikachu
-        # analise de colisão com o IronMan
-        if ironPosicaoY < misselY + misselAltura:
-            if ironPosicaoX < misselX and ironPosicaoX+larguraPikachu > misselX or misselX+misselLargura > ironPosicaoX and misselX+misselLargura < ironPosicaoX+larguraPikachu:
+        pikachuPosicaoX += movimentoX
+        if pikachuPosicaoX < 0:
+            pikachuPosicaoX = 0
+        elif pikachuPosicaoX > largura-larguraPikachu:
+            pikachuPosicaoX = largura-larguraPikachu
+        #analise de colisão 
+        if pikachuPosicaoY < pokeballY + pokeballAltura:
+            if pikachuPosicaoX < pokeballX and pikachuPosicaoX+larguraPikachu > pokeballX or pokeballX+pokeballLargura > pikachuPosicaoX and pokeballX+pokeballLargura < pikachuPosicaoX+larguraPikachu:
                 dead()
-        # analise de colisão com o IronMan
-        mostraPikachu(ironPosicaoX, ironPosicaoY)
+        #analise de colisão 
+        mostraPikachu(pikachuPosicaoX, pikachuPosicaoY)
         pygame.display.update()
-        clock.tick(60)  # faz com que o while execute 60x por segundo
+        clock.tick(60) 
 game()
