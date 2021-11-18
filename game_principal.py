@@ -2,23 +2,27 @@ import pygame
 import time
 import random
 pygame.init()
-largura = 736
-altura = 669
+largura = 800
+altura = 600
 configTela = (largura, altura)
 gameDisplay = pygame.display.set_mode(configTela)
 clock = pygame.time.Clock()
 white = (255, 255, 255)
 red = (255, 0, 0)
+black = (0, 0, 0)
 pygame.display.set_caption("Pokémon Dodge")
 icone = pygame.image.load("assets/pikachuicon.png")
 pygame.display.set_icon(icone)
 pikachu = pygame.image.load("assets/pikachu2.png")
-larguraPikachu = 256
+larguraPikachu = 105
 fundo = pygame.image.load("assets/cidade_pallet.png")
-pokeball = pygame.image.load("assets/pokeball2.jpg")
+pokeball = pygame.image.load("assets/pokebola.png")
 capturadoSound = pygame.mixer.Sound("assets/pikachu_scream.mp3")
+capturadoSound.set_volume(0.04)
+pikachuSound = pygame.mixer.Sound("assets/pikachuSound.mp3")
+pikachuSound.set_volume(0.1)
 descargaSound = pygame.mixer.Sound("assets/descarga.mp3")
-descargaSound.set_volume(0.2)
+descargaSound.set_volume(0.1)
 nomeJogador = str(input("Insira o seu nome: "))
 emailJogador = str(input("Insira o seu email: "))
 arquivo = open("historico.txt", "a")
@@ -39,23 +43,25 @@ def escreverTela(texto):
     time.sleep(5)
     game()
 def escreverPlacar(contador):
-    fonte = pygame.font.SysFont(None, 30)
-    texto = fonte.render("Desvios:"+str(contador), True, white)
-    gameDisplay.blit(texto, (10, 10))
+    fonte = pygame.font.SysFont(None, 50)
+    texto = fonte.render("Desvios:"+str(contador), True, black)
+    gameDisplay.blit(texto, (55, 55))
 def dead():
+    pygame.mixer.Sound.play(pikachuSound)
+    pygame.mixer.music.stop()
     pygame.mixer.Sound.play(capturadoSound)
     pygame.mixer.music.stop()
     escreverTela("Você foi capturado!")
 def game():
     pygame.mixer.music.load("assets/pokemonbattle.mp3")
-    pygame.mixer.music.set_volume(0.3)
+    pygame.mixer.music.set_volume(0.2)
     pygame.mixer.music.play(-1)
-    pikachuPosicaoX = largura*0.2
-    pikachuPosicaoY = altura*0.62
+    pikachuPosicaoX = largura*0.42
+    pikachuPosicaoY = altura*0.8
     movimentoX = 0
-    velocidade = 15
-    pokeballAltura = 10
-    pokeballLargura = 10
+    velocidade = 20
+    pokeballAltura = 140
+    pokeballLargura = 140
     pokeballVelocidade = 3
     pokeballX = random.randrange(0, largura)
     pokeballY = -200
